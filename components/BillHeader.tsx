@@ -1,6 +1,6 @@
-import { Scissors } from 'lucide-react';
+import { Scissors, Calendar } from 'lucide-react';
 import { SplitBillModel } from '@/lib/types';
-import { formatCurrency } from '@/lib/utils';
+import { formatCurrency, formatDate } from '@/lib/utils';
 
 interface BillHeaderProps {
   bill: SplitBillModel;
@@ -18,6 +18,14 @@ export default function BillHeader({ bill }: BillHeaderProps) {
       <div className="space-y-1">
         <h1 className="text-2xl font-bold text-text-primary">{bill.title}</h1>
         <p className="text-sm text-text-secondary">dibuat oleh {bill.ownerName}</p>
+
+        {/* Date */}
+        {bill.createdAt && (
+          <div className="flex items-center justify-center gap-1.5 text-xs text-text-tertiary pt-1">
+            <Calendar className="w-3.5 h-3.5" />
+            <span>{formatDate(bill.createdAt)}</span>
+          </div>
+        )}
       </div>
 
       {/* Total Amount */}

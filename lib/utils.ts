@@ -27,6 +27,25 @@ export function formatAmount(amount: number): string {
 }
 
 /**
+ * Format Firebase Timestamp to Indonesian date format
+ * Example: formatDate(timestamp) => "20 Mei 2024, 14:30"
+ */
+export function formatDate(timestamp: any): string {
+  if (!timestamp) return '';
+
+  // Convert Firestore Timestamp to Date
+  const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+
+  return new Intl.DateTimeFormat('id-ID', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(date);
+}
+
+/**
  * Extract item name from notes line
  * Example: "• 2x Nasi Goreng (Rp 25000 @ Rp 50000): Andi, Budi" => "2x Nasi Goreng"
  */
