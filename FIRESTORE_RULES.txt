@@ -1,0 +1,51 @@
+// ========================================
+// FIRESTORE SECURITY RULES
+// ========================================
+// Copy-paste ini ke Firebase Console → Firestore Database → Rules
+// Klik "Publish" setelah paste
+// ========================================
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ===== Split Bills Collection =====
+    match /splitBills/{billId} {
+
+      // ✅ Allow PUBLIC READ for individual bills
+      // Siapa saja yang punya link bisa lihat detail bill
+      allow read: if true;
+
+      // ✅ Only authenticated users (iOS app) can CREATE
+      allow create: if request.auth != null;
+
+      // ✅ Only owner or participants can UPDATE
+      allow update: if request.auth != null &&
+                      (request.auth.uid == resource.data.ownerUID ||
+                       request.auth.uid in resource.data.participantUIDs);
+
+      // ✅ Only owner can DELETE
+      allow delete: if request.auth != null &&
+                      request.auth.uid == resource.data.ownerUID;
+    }
+
+    // ===== All Other Collections =====
+    // Deny by default untuk security
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
+
+// ========================================
+// CARA IMPLEMENTASI:
+// ========================================
+// 1. Buka Firebase Console (https://console.firebase.google.com)
+// 2. Pilih project kamu
+// 3. Sidebar kiri → Firestore Database
+// 4. Tab "Rules"
+// 5. Delete semua rules yang ada
+// 6. Copy-paste rules di atas
+// 7. Klik "Publish"
+// 8. Done! ✅
+// ========================================
